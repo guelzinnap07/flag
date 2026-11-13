@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Chroma Flag · Descubra a bandeira secreta</title>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;800&display=swap" rel="stylesheet">
+<style>
+:root{--bg1:#f4f1ff;--bg2:#dff1ff;--card:#ffffffcc;--tx:#1d1a33;--mut:#6a6786;--bd:#1d1a3322;--ac:#6d4aff;--ac2:#ff4d8d;--ok:#12a150;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg1:#150f33;--bg2:#0a2540;--card:#1c1640cc;--tx:#f2f0ff;--mut:#a9a6c9;--bd:#ffffff22;--ok:#3ddc84}}
+:root[data-theme="dark"]{--bg1:#150f33;--bg2:#0a2540;--card:#1c1640cc;--tx:#f2f0ff;--mut:#a9a6c9;--bd:#ffffff22;--ok:#3ddc84}
+*{box-sizing:border-box}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;font:400 16px/1.4 Outfit,system-ui,sans-serif;color:var(--tx);background:linear-gradient(140deg,var(--bg1),var(--bg2)) fixed;overflow-x:hidden}
+body::before,body::after{content:"";position:fixed;width:340px;height:340px;border-radius:50%;filter:blur(70px);opacity:.45;z-index:-1;animation:fl 14s ease-in-out infinite alternate}
+body::before{background:var(--ac);top:-90px;left:-90px}
+body::after{background:var(--ac2);bottom:-90px;right:-90px;animation-delay:-7s}
+@keyframes fl{to{transform:translate(60px,50px) scale(1.2)}}
+main{max-width:520px;margin:0 auto;padding:22px 16px 40px}
+h1{margin:0;text-align:center;font-weight:800;font-size:clamp(30px,9vw,44px);letter-spacing:-.02em}
+h1 span{background:linear-gradient(90deg,var(--ac),var(--ac2),#ffb02e);-webkit-background-clip:text;background-clip:text;color:transparent}
+.sub{text-align:center;color:var(--mut);margin:6px 0 18px}
+.card{background:var(--card);-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);border:1px solid var(--bd);border-radius:26px;padding:18px;box-shadow:0 20px 60px #0003}
+.top{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;color:var(--mut);font-weight:600;font-size:14px}
+#dots i{display:inline-block;width:12px;height:12px;border-radius:50%;margin-right:5px;background:var(--bd);transition:.3s}
+#dots i.u{background:var(--ac2)}
+.flag{position:relative;aspect-ratio:3/2;border-radius:16px;overflow:hidden;background:repeating-linear-gradient(45deg,#00000014 0 10px,#0000000a 10px 20px),var(--bd);box-shadow:0 10px 30px #0003,inset 0 0 0 1px var(--bd)}
+.flag svg{position:absolute;inset:0;width:100%;height:100%}
+.q{position:absolute;inset:0;display:grid;place-items:center;font-size:72px;font-weight:800;color:var(--mut);opacity:.5}
+.flag::after{content:"";position:absolute;inset:0;background:linear-gradient(115deg,#fff0 30%,#ffffff40 48%,#fff0 66%);background-size:250% 100%;animation:sh 4s infinite;pointer-events:none}
+@keyframes sh{from{background-position:120% 0}to{background-position:-120% 0}}
+.pop{animation:pop .7s both}
+@keyframes pop{from{opacity:0;filter:brightness(3)}to{opacity:1;filter:none}}
+.chips{display:flex;gap:8px;justify-content:center;margin:14px 0;align-items:center;color:var(--mut);font-size:13px;font-weight:600}
+.chips b{width:24px;height:24px;border-radius:50%;border:2px dashed var(--mut);display:grid;place-items:center;font-size:12px}
+.chips b.on{border:2px solid #fff;box-shadow:0 0 0 1px var(--bd),0 3px 8px #0004}
+.row{display:flex;gap:8px}
+input{flex:1;min-width:0;font:inherit;padding:13px 15px;border-radius:14px;border:1.5px solid var(--bd);background:var(--bg1);color:var(--tx);outline:0}
+input:focus{border-color:var(--ac);box-shadow:0 0 0 4px #6d4aff33}
+.inw{position:relative;flex:1;min-width:0}
+.inw input{width:100%;padding-left:62px;font-weight:600}
+#pf{position:absolute;left:12px;top:50%;transform:translateY(-50%);width:38px;height:25px;border-radius:5px;border:1.5px dashed var(--mut);overflow:hidden;display:grid;place-items:center;pointer-events:none}
+#pf:empty::before{content:"?";color:var(--mut);font-weight:800;font-size:13px}
+#pf.on{border:0;box-shadow:0 0 0 1px var(--bd),0 3px 8px #0003;animation:pop .35s both}
+#pf svg{width:100%;height:100%;display:block}
+#sug{display:none;position:absolute;left:0;right:0;top:calc(100% + 8px);z-index:20;background:var(--bg1);border:1px solid var(--bd);border-radius:18px;padding:6px;box-shadow:0 18px 40px #0006;max-height:290px;overflow:auto}
+.o{display:flex;align-items:center;gap:12px;padding:8px 10px;border-radius:12px;cursor:pointer;font-weight:600;transition:background .12s}
+.o svg{width:44px;height:29px;border-radius:5px;flex:none;box-shadow:0 0 0 1px var(--bd),0 2px 6px #0003}
+.o.h{background:linear-gradient(90deg,#6d4aff33,#ff4d8d33)}
+mark{background:none;color:var(--ac2);font-weight:800}
+button{font:inherit;font-weight:700;border:0;border-radius:14px;padding:0 20px;color:#fff;background:linear-gradient(135deg,var(--ac),var(--ac2));cursor:pointer;transition:transform .15s}
+button:active{transform:scale(.95)}
+#msg{min-height:24px;margin:12px 0 4px;text-align:center;font-weight:600}
+#msg.bad{animation:sk .4s}
+#msg.win{color:var(--ok);font-size:19px}
+@keyframes sk{25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}
+ul{list-style:none;margin:8px 0 0;padding:0;display:grid;gap:8px}
+li{display:flex;align-items:center;gap:12px;padding:8px 10px;border-radius:14px;background:var(--bg1);border:1px solid var(--bd);animation:pop .4s both}
+li svg{width:48px;height:32px;border-radius:5px;flex:none;box-shadow:0 0 0 1px var(--bd)}
+li div{flex:1;min-width:0}
+li small{display:block;color:var(--mut);font-size:12px}
+.d{display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:3px;vertical-align:-1px;box-shadow:0 0 0 1px var(--bd)}
+.x{color:var(--ac2);font-weight:800}
+.ok{color:var(--ok);font-weight:800}
+</style>
+</head>
+<body>
+<main>
+<h1>🚩 Chroma <span>Flag</span></h1>
+<p class="sub">Descubra a bandeira secreta, cor por cor. Cada chute errado revela um pedaço!</p>
+<section class="card">
+<div class="top"><span id="dots"></span><span id="cnt"></span></div>
+<div class="flag" id="flag"></div>
+<div class="chips" id="chips"></div>
+<div class="row"><div class="inw"><span id="pf"></span><input id="in" placeholder="Digite um país…" autocomplete="off" autocapitalize="off" spellcheck="false"><div id="sug"></div></div><button id="go">Chutar</button></div>
+
+<div id="msg" role="status"></div>
+<ul id="hist"></ul>
+</section>
+</main>
+<script>
+const PAL={W:'#f4f4f6',R:'#e03a4e',B:'#2456c9',G:'#1fa65a',Y:'#ffc928',K:'#1b1b22',O:'#ff8c2a',L:'#62b8f0'};
+const R=(c,x,y,w,h)=>[c,`<rect x="${x}" y="${y}" width="${w}" height="${h}"/>`];
+const BG=c=>R(c,0,0,30,20);
+const H=s=>[...s].map((k,i,a)=>R(k,0,i*20/a.length,30,20/a.length));
+const V=s=>[...s].map((k,i,a)=>R(k,i*30/a.length,0,30/a.length,20));
+const ST=(a,b,n)=>[...Array(n)].map((_,i)=>R(i%2?b:a,0,i*20/n,30,20/n));
+const C=(c,x,y,r)=>[c,`<circle cx="${x}" cy="${y}" r="${r}"/>`];
+const Pg=(c,p)=>[c,`<polygon points="${p}"/>`];
+const S=(c,x,y,r)=>Pg(c,[...Array(10)].map((_,i)=>{const a=i*Math.PI/5-Math.PI/2,d=i%2?r*.4:r;return(x+d*Math.cos(a)).toFixed(1)+','+(y+d*Math.sin(a)).toFixed(1)}).join(' '));
+const L=(c,d,w)=>[c,`<path d="${d}" fill="none" stroke="currentColor" stroke-width="${w}"/>`];
+const X=(c,x,w)=>[R(c,x,0,w,20),R(c,0,10-w/2,30,w)];
+const DG='M0 0L30 20M30 0L0 20';
+const D=(c,r)=>C(c,15,10,r),M=(c,r)=>S(c,15,10,r),TR=(c,w)=>Pg(c,`0,0 ${w},10 0,20`),Z=c=>[R(c,0,0,8,20),Pg(c,'8,0 12,2.5 8,5 12,7.5 8,10 12,12.5 8,15 12,17.5 8,20')],UJ=()=>[R('B',0,0,15,10),L('W','M0 0L15 10M15 0L0 10',2),R('W',6,0,3,10),R('W',0,3.5,15,3),R('R',6.7,0,1.6,10),R('R',0,4.2,15,1.6)];
+const F=[
+['Brasil',[BG('G'),Pg('Y','15,2 28,10 15,18 2,10'),C('B',15,10,5),L('W','M10.3 9Q15 7.5 19.7 11.5',1)]],
+['Argentina',[...H('LWL'),C('Y',15,10,2)]],
+['França',V('BWR')],['Itália',V('GWR')],['Alemanha',H('KRY')],['Irlanda',V('GWO')],['Bélgica',V('KYR')],
+['Países Baixos',H('RWB')],['Rússia',H('WBR')],['Polônia',H('WR')],['Ucrânia',H('BY')],
+['Espanha',[BG('R'),R('Y',0,5,30,10)]],
+['Portugal',[R('G',0,0,12,20),R('R',12,0,18,20),C('Y',12,10,3.5)]],
+['Japão',[BG('W'),C('R',15,10,6)]],
+['China',[BG('R'),S('Y',6,6,3.8),S('Y',12,3,1.2),S('Y',14,6,1.2),S('Y',14,9,1.2),S('Y',12,12,1.2)]],
+['Vietnã',[BG('R'),S('Y',15,10.5,6.5)]],
+['Índia',[...H('OWG'),C('B',15,10,2.3)]],
+['Canadá',[R('R',0,0,7.5,20),R('W',7.5,0,15,20),R('R',22.5,0,7.5,20),Pg('R','15,4 16.5,8 19,7 18,11 21,12 15.5,13.5 15.5,17 14.5,17 14.5,13.5 9,12 12,11 11,7 13.5,8')]],
+['Estados Unidos',[...ST('R','W',13),R('B',0,0,12,10.8),...[1,2,3].flatMap(i=>[1,2,3].map(j=>S('W',i*3,j*2.7,1.1)))]],
+['Reino Unido',[BG('B'),L('W',DG,3.5),L('R',DG,1.2),R('W',12,0,6,20),R('W',0,7,30,6),R('R',13,0,4,20),R('R',0,8,30,4)]],
+['México',[...V('GWR'),C('O',15,10,2.4)]],
+['Suécia',[BG('B'),...X('Y',8,4)]],
+['Noruega',[BG('R'),...X('W',7,6),...X('B',8,4)]],
+['Dinamarca',[BG('R'),...X('W',8,4)]],
+['Finlândia',[BG('W'),...X('B',8,4)]],
+['Suíça',[BG('R'),R('W',13,4,4,12),R('W',9,8,12,4)]],
+['Áustria',H('RWR')],['Hungria',H('RWG')],['Bulgária',H('WGR')],['Romênia',V('BYR')],
+['Croácia',[...H('RWB'),R('R',13,7.5,4,5)]],
+['Colômbia',[R('Y',0,0,30,10),R('B',0,10,30,5),R('R',0,15,30,5)]],
+['Venezuela',H('YBR')],['Peru',V('RWR')],
+['Chile',[R('W',0,0,30,10),R('R',0,10,30,10),R('B',0,0,10,10),S('W',5,5,3.2)]],
+['Bolívia',H('RYG')],
+['Uruguai',[...ST('W','B',9),R('W',0,0,13.4,11.2),C('Y',6.7,5.6,3)]],
+['Paraguai',[...H('RWB'),C('Y',15,10,2)]],
+['Cuba',[...ST('B','W',5),Pg('R','0,0 13,10 0,20'),S('W',4.5,10,3)]],
+['Turquia',[BG('R'),C('W',11,10,5),C('R',12.5,10,4),S('W',17,10,2.5)]],
+['Tailândia',[BG('R'),R('W',0,3.3,30,13.4),R('B',0,6.7,30,6.6)]],
+['Bangladesh',[BG('G'),C('R',13.5,10,5.5)]],
+['Israel',[BG('W'),R('B',0,3,30,2),R('B',0,15,30,2),S('B',15,10,3.5)]],
+['Egito',[...H('RWK'),C('Y',15,10,1.8)]],
+['Nigéria',V('GWG')],
+['Gana',[...H('RYG'),S('K',15,10,4)]],
+['Senegal',[...V('GYR'),S('G',15,10,3.5)]],
+['Etiópia',[...H('GYR'),C('B',15,10,4)]],
+['Marrocos',[BG('R'),S('G',15,10,5.5)]],
+['Irã',[...H('GWR'),C('R',15,10,1.8)]],
+['Jamaica',[BG('G'),L('Y',DG,2.5),Pg('K','0,0 15,10 0,20'),Pg('K','30,0 15,10 30,20')]],
+['Austrália',[BG('B'),S('W',8,15,4),S('W',22,5,2),S('W',24,12,2),S('W',19,9,2),S('W',26,8,1.6)]],
+['Filipinas',[...H('BR'),Pg('W','0,0 13,10 0,20'),C('Y',4,10,2)]],
+['Afeganistão',[...V('KRG'),D('W',2.5)]],
+['África do Sul',[...H('RB'),L('W','M0 2L11 10H30M0 18L11 10',5),L('G','M0 2L11 10H30M0 18L11 10',3),Pg('Y','0,3 8,10 0,17'),Pg('K','0,5 6,10 0,15')]],
+['Albânia',[BG('R'),M('K',6)]],['Andorra',V('BYR')],['Angola',[...H('RK'),D('Y',3)]],
+['Antígua e Barbuda',[BG('R'),Pg('K','0,0 30,0 15,12'),Pg('B','6,0 24,0 15,8'),Pg('Y','10,0 20,0 15,5')]],
+['Arábia Saudita',[BG('G'),R('W',6,13,18,1.5),R('W',8,6,14,1.5)]],
+['Argélia',[R('G',0,0,15,20),R('W',15,0,15,20),D('R',4.5),S('R',16,10,2.8)]],
+['Armênia',H('RBO')],['Azerbaijão',[...H('LRG'),C('W',14,10,2.5)]],
+['Bahamas',[...H('LYL'),TR('K',13)]],['Bahrein',[BG('R'),...Z('W')]],
+['Barbados',[...V('BYB'),L('K','M15 3V16',1.2)]],
+['Bielorrússia',[R('R',0,0,30,13),R('G',0,13,30,7),R('W',0,0,4,20)]],
+['Belize',[BG('B'),R('R',0,0,30,2.5),R('R',0,17.5,30,2.5),D('W',6)]],
+['Benin',[R('G',0,0,12,20),R('Y',12,0,18,10),R('R',12,10,18,10)]],
+['Butão',[Pg('Y','0,0 30,0 0,20'),Pg('O','30,0 30,20 0,20'),D('W',3.5)]],
+['Bósnia e Herzegovina',[BG('B'),Pg('Y','8,0 24,0 24,20'),S('W',7,3,1.2),S('W',12,8,1.2),S('W',17,13,1.2)]],
+['Botsuana',[BG('L'),R('W',0,7,30,6),R('K',0,8,30,4)]],
+['Brunei',[BG('Y'),L('W','M0 2L30 11',3.5),L('K','M0 8L30 17',2.5),D('R',3.5)]],
+['Burkina Faso',[...H('RG'),M('Y',4)]],
+['Burundi',[BG('R'),Pg('G','0,0 15,10 0,20'),Pg('G','30,0 15,10 30,20'),L('W',DG,2),D('W',4.5)]],
+['Cabo Verde',[BG('B'),R('W',0,10.5,30,3),R('R',0,11.5,30,1)]],
+['Camboja',[BG('B'),R('R',0,5,30,10),R('W',9,8,12,4)]],
+['Camarões',[...V('GRY'),M('Y',3.5)]],
+['Catar',[BG('R'),R('W',0,0,10,20),Pg('W','10,0 15,2 10,4 15,6 10,8 15,10 10,12 15,14 10,16 15,18 10,20')]],
+['Cazaquistão',[BG('L'),C('Y',15,9,4),R('Y',3,16,24,1.2)]],['Chade',V('BYR')],
+['Chipre',[BG('W'),Pg('O','7,6 15,4 23,6 20,10 15,9 10,10')]],
+['Comores',[...H('YWRB'),TR('G',14)]],
+['Congo',[BG('Y'),Pg('G','0,0 20,0 0,20'),Pg('R','30,0 30,20 10,20')]],
+['RD Congo',[BG('L'),L('Y','M0 20L30 0',5),L('R','M0 20L30 0',3),S('Y',5,4,3)]],
+['Coreia do Norte',[BG('B'),R('W',0,3,30,14),R('R',0,4,30,12),C('W',10,10,4),S('R',10,10,3.5)]],
+['Coreia do Sul',[BG('W'),C('B',15,10,4.5),['R','<path d="M10.5 10A4.5 4.5 0 0 1 19.5 10Z"/>'],R('K',3,3,4,.8),R('K',3,5,4,.8),R('K',23,15,4,.8),R('K',23,17,4,.8)]],
+['Costa do Marfim',V('OWG')],
+['Costa Rica',[BG('B'),R('W',0,3.3,30,13.4),R('R',0,6.7,30,6.6)]],
+['Djibuti',[R('L',0,0,30,10),R('G',0,10,30,10),TR('W',17),S('R',5,10,3)]],
+['Dominica',[BG('G'),...X('Y',12.5,5),D('R',4.2),M('G',2)]],
+['El Salvador',[...H('BWB'),D('Y',2.5)]],
+['Emirados Árabes Unidos',[R('R',0,0,8,20),R('G',8,0,22,6.7),R('W',8,6.7,22,6.6),R('K',8,13.3,22,6.7)]],
+['Equador',[R('Y',0,0,30,10),R('B',0,10,30,5),R('R',0,15,30,5),D('O',3)]],
+['Eritreia',[R('G',0,0,30,10),R('L',0,10,30,10),TR('R',30)]],
+['Eslováquia',[...H('WBR'),R('R',6,4,8,9),R('W',9.2,6,1.6,5)]],
+['Eslovênia',[...H('WBR'),R('B',5,3,6,6)]],['Estônia',H('BKW')],
+['Eswatini',[BG('B'),R('Y',0,5,30,10),R('R',0,6.5,30,7),R('W',10,8,10,4),R('K',15,8,5,4)]],
+['Fiji',[BG('L'),...UJ()]],['Gabão',H('GYB')],
+['Gâmbia',[R('R',0,0,30,6.6),R('W',0,6.6,30,1),R('B',0,7.6,30,4.8),R('W',0,12.4,30,1),R('G',0,13.4,30,6.6)]],
+['Geórgia',[BG('W'),...X('R',13,4),S('R',6,4,1.6),S('R',24,4,1.6),S('R',6,16,1.6),S('R',24,16,1.6)]],
+['Granada',[BG('R'),Pg('Y','3,3 27,3 15,10'),Pg('Y','3,17 27,17 15,10'),Pg('G','3,3 3,17 15,10'),Pg('G','27,3 27,17 15,10'),D('R',3)]],
+['Grécia',[...ST('B','W',9),R('B',0,0,11,11),R('W',4.5,0,2,11),R('W',0,4.5,11,2)]],
+['Guatemala',[...V('LWL'),D('G',2.5)]],
+['Guiana',[BG('G'),Pg('W','0,0 30,10 0,20'),Pg('Y','0,1.5 26,10 0,18.5'),Pg('K','0,0 15,10 0,20'),Pg('R','0,2 13,10 0,18')]],
+['Guiné',V('RYG')],
+['Guiné-Bissau',[R('R',0,0,9,20),R('Y',9,0,21,10),R('G',9,10,21,10),S('K',4.5,10,3)]],
+['Guiné Equatorial',[...H('GWR'),TR('B',8)]],
+['Haiti',[...H('BR'),R('W',11,7,8,6)]],['Honduras',[...H('BWB'),M('B',1.4)]],['Iêmen',H('RWK')],
+['Ilhas Marshall',[BG('B'),Pg('O','0,20 30,2 30,6'),Pg('W','0,20 30,6 30,10'),S('W',6,5,3.5)]],
+['Ilhas Salomão',[Pg('B','0,0 30,0 0,20'),Pg('G','30,0 30,20 0,20'),L('Y','M0 20L30 0',2),S('W',5,4,1.5)]],
+['Indonésia',H('RW')],['Iraque',[...H('RWK'),R('G',9,9,12,2)]],
+['Islândia',[BG('B'),...X('W',7,6),...X('R',8,4)]],
+['Jordânia',[R('K',0,0,30,6.7),R('W',0,6.7,30,6.6),R('G',0,13.3,30,6.7),TR('R',14)]],
+['Kiribati',[R('R',0,0,30,12),R('B',0,12,30,8),C('Y',15,9,4.5)]],
+['Kosovo',[BG('B'),Pg('Y','9,6 21,6 22,12 15,14 8,12'),S('W',8,3,1),S('W',15,2,1),S('W',22,3,1)]],
+['Kuwait',[...H('GWR'),TR('K',9)]],
+['Laos',[R('R',0,0,30,5),R('B',0,5,30,10),R('R',0,15,30,5),D('W',4)]],
+['Lesoto',[R('B',0,0,30,6),R('W',0,6,30,8),R('G',0,14,30,6),Pg('K','15,7 18,13 12,13')]],
+['Letônia',[R('R',0,0,30,8),R('W',0,8,30,4),R('R',0,12,30,8)]],
+['Líbano',[R('R',0,0,30,5),R('W',0,5,30,10),R('R',0,15,30,5),Pg('G','15,5 20,12 10,12')]],
+['Libéria',[...ST('R','W',11),R('B',0,0,10,9),S('W',5,4.5,3)]],
+['Líbia',[R('R',0,0,30,5),R('K',0,5,30,10),R('G',0,15,30,5),D('W',2.5)]],
+['Liechtenstein',[R('B',0,0,30,10),R('R',0,10,30,10),C('Y',7,5,2.3)]],
+['Lituânia',H('YGR')],['Luxemburgo',H('RWL')],
+['Macedônia do Norte',[BG('R'),L('Y','M0 0L30 20M30 0L0 20M15 0V20M0 10H30',1.2),D('Y',4.5),D('R',3.5)]],
+['Madagascar',[R('W',0,0,10,20),R('R',10,0,20,10),R('G',10,10,20,10)]],
+['Malásia',[...ST('R','W',14),R('B',0,0,15,11),C('Y',7,5.5,3.5)]],
+['Malawi',[...H('KRG'),C('R',15,6,3.2)]],
+['Maldivas',[BG('R'),R('G',5,4,20,12),D('W',3.5),C('G',16.3,10,3)]],
+['Mali',V('GYR')],
+['Malta',[R('W',0,0,15,20),R('R',15,0,15,20),R('K',3,2,1.5,4),R('K',1.9,3.2,3.7,1.5)]],
+['Maurício',H('RBYG')],
+['Mauritânia',[BG('G'),R('R',0,0,30,3),R('R',0,17,30,3),C('Y',15,8,4)]],
+['Micronésia',[BG('L'),S('W',15,5,2),S('W',15,15,2),S('W',8,10,2),S('W',22,10,2)]],
+['Moçambique',[...H('GKY'),TR('R',13),S('Y',4,10,3)]],
+['Moldávia',[...V('BYR'),D('O',3)]],['Mônaco',H('RW')],
+['Mongólia',[...V('RBR'),C('Y',5,6,2),R('Y',3.6,8,2.8,8)]],
+['Montenegro',[BG('R'),R('Y',0,0,30,1.2),R('Y',0,18.8,30,1.2),R('Y',0,0,1.2,20),R('Y',28.8,0,1.2,20),D('Y',4)]],
+['Myanmar',[...H('YGR'),M('W',6)]],
+['Namíbia',[Pg('B','0,0 28,0 0,18'),Pg('G','30,2 30,20 2,20'),L('W','M0 20L30 0',4.5),L('R','M0 20L30 0',2.5),C('Y',6,5,2.5)]],
+['Nauru',[BG('B'),R('Y',0,9.2,30,1.6),S('W',8,14,2.5)]],
+['Nepal',[Pg('B','2,0 28,10 12,10 28,20 2,20'),Pg('R','4.5,3 20,9 8.5,9 20,17 4.5,17'),C('W',8,7,1.5),C('W',8,14,1.5)]],
+['Nicarágua',[...H('BWB'),D('Y',2.4)]],['Níger',[...H('OWG'),D('O',2.5)]],
+['Nova Zelândia',[BG('B'),...UJ(),S('R',22,5,1.6),S('R',19,10,1.6),S('R',25,10,1.6),S('R',22,16,1.6)]],
+['Omã',[R('W',0,0,30,6.7),R('R',0,6.7,30,6.6),R('G',0,13.3,30,6.7),R('R',0,0,9,20)]],
+['Palau',[BG('L'),C('Y',13,10,6)]],['Palestina',[...H('KWG'),TR('R',10)]],
+['Panamá',[R('W',0,0,15,10),R('R',15,0,15,10),R('B',0,10,15,10),R('W',15,10,15,10),S('B',7.5,5,3),S('R',22.5,15,3)]],
+['Papua-Nova Guiné',[Pg('R','0,0 30,0 30,20'),Pg('K','0,0 0,20 30,20'),S('W',7,15,2.2),C('Y',23,7,3)]],
+['Paquistão',[BG('G'),R('W',0,0,7.5,20),C('W',19,10,5),C('G',20.5,9,4.2),S('W',21,8,1.8)]],
+['Quênia',[...H('KRG'),R('W',0,6,30,1),R('W',0,13,30,1),D('R',3.5)]],
+['Quirguistão',[BG('R'),D('Y',5),D('R',3.5)]],
+['República Centro-Africana',[R('B',0,0,30,5),R('W',0,5,30,5),R('G',0,10,30,5),R('Y',0,15,30,5),R('R',13,0,4,20),S('Y',5,2.5,2)]],
+['República Dominicana',[R('B',0,0,13,8.5),R('R',17,0,13,8.5),R('R',0,11.5,13,8.5),R('B',17,11.5,13,8.5),...X('W',13,4)]],
+['República Tcheca',[R('W',0,0,30,10),R('R',0,10,30,10),Pg('B','0,0 15,10 0,20')]],
+['Ruanda',[R('L',0,0,30,10),R('Y',0,10,30,5),R('G',0,15,30,5),C('Y',24,5,2.5)]],
+['Samoa',[BG('R'),R('B',0,0,15,11),S('W',7.5,5.5,1.8),S('W',4,3,1.2),S('W',11,3,1.2),S('W',4,8,1.2),S('W',11,8,1.2)]],
+['San Marino',[R('W',0,0,30,10),R('L',0,10,30,10),D('Y',2.5)]],
+['Santa Lúcia',[BG('L'),Pg('W','15,3 24,16 6,16'),Pg('K','15,5.5 22,15 8,15'),Pg('Y','15,10 22,15 8,15')]],
+['São Cristóvão e Neves',[Pg('G','0,0 26,0 0,17'),Pg('R','30,3 30,20 4,20'),L('Y','M0 20L30 0',5.5),L('K','M0 20L30 0',3.5),S('W',9,13,1.5),S('W',21,7,1.5)]],
+['São Tomé e Príncipe',[R('G',0,0,30,7),R('Y',0,7,30,6),R('G',0,13,30,7),TR('R',11),S('K',17,10,2.5),S('K',24,10,2.5)]],
+['São Vicente e Granadinas',[...V('BYG'),Pg('G','12,5 15,9 12,13 9,9'),Pg('G','18,5 21,9 18,13 15,9')]],
+['Seicheles',[Pg('B','0,20 0,0 10,0'),Pg('Y','0,20 10,0 20,0'),Pg('R','0,20 20,0 30,0 30,6'),Pg('W','0,20 30,6 30,13'),Pg('G','0,20 30,13 30,20')]],
+['Serra Leoa',H('GWB')],['Sérvia',[...H('RBW'),R('R',6,5,5,8)]],
+['Singapura',[R('R',0,0,30,10),R('W',0,10,30,10),C('W',7,5,3.5),C('R',8.3,5,3),S('W',10,5,1.3)]],
+['Síria',[...H('RWK'),S('G',9,10,2),S('G',21,10,2)]],['Somália',[BG('L'),M('W',6)]],
+['Sri Lanka',[BG('Y'),R('R',9,1.5,20.5,17),R('G',2,1.5,3,17),R('O',5,1.5,3,17),R('Y',14,6,8,8)]],
+['Sudão',[R('R',0,0,30,6.7),R('W',0,6.7,30,6.6),R('K',0,13.3,30,6.7),TR('G',12)]],
+['Sudão do Sul',[R('K',0,0,30,5),R('W',0,5,30,1),R('R',0,6,30,8),R('W',0,14,30,1),R('G',0,15,30,5),TR('B',13),S('Y',4,10,2.5)]],
+['Suriname',[R('G',0,0,30,4),R('W',0,4,30,2),R('R',0,6,30,8),R('W',0,14,30,2),R('G',0,16,30,4),M('Y',5)]],
+['Tadjiquistão',[...H('RWG'),D('Y',2.5)]],
+['Tanzânia',[Pg('G','0,0 26,0 0,17'),Pg('L','30,3 30,20 4,20'),L('Y','M0 20L30 0',5.5),L('K','M0 20L30 0',3.5)]],
+['Timor-Leste',[BG('R'),Pg('Y','0,0 18,10 0,20'),Pg('K','0,0 10,10 0,20'),S('W',4,10,2.5)]],
+['Togo',[...ST('G','Y',5),R('R',0,0,12,12),S('W',6,6,3.5)]],
+['Tonga',[BG('R'),R('W',0,0,13,10.5),R('R',5.5,2,2,6.5),R('R',3.2,4.3,6.5,2)]],
+['Trinidad e Tobago',[BG('R'),L('W','M0 0L30 20',6),L('K','M0 0L30 20',4)]],
+['Tunísia',[BG('R'),D('W',5.5),C('R',16,10,4.2),S('R',16.5,10,2)]],
+['Turcomenistão',[BG('G'),R('R',3,0,5,20),C('W',19,6,2.5)]],
+['Tuvalu',[BG('L'),...UJ(),S('Y',20,6,1.5),S('Y',25,12,1.5),S('Y',18,15,1.5)]],
+['Uganda',[...H('KYRKYR'),D('W',3.5)]],
+['Uzbequistão',[...H('LWG'),R('R',0,6,30,1),R('R',0,13,30,1)]],
+['Vanuatu',[R('R',0,0,30,10),R('G',0,10,30,10),TR('Y',17),Pg('K','0,2 13,10 0,18')]],
+['Vaticano',[R('Y',0,0,15,20),R('W',15,0,15,20),R('R',20,6,4,6)]],
+['Zâmbia',[BG('G'),R('R',20,10,3.3,10),R('K',23.3,10,3.3,10),R('O',26.6,10,3.4,10),Pg('O','16,3 18,8 14,8')]],
+['Zimbábue',[...H('GYRKRYG'),TR('W',13),S('R',5,10,3.5)]],
+['Taiwan',[BG('R'),R('B',0,0,15,10),S('W',7.5,5,3.5)]]
+];
+const AL={eua:'estados unidos',holanda:'paises baixos',inglaterra:'reino unido',tchequia:'republica tcheca',eau:'emirados arabes unidos',belarus:'bielorrussia',birmania:'myanmar',swazilandia:'eswatini',macedonia:'macedonia do norte','timor leste':'timor-leste','guine bissau':'guine-bissau'};
+const MAX=8;
+const $=id=>document.getElementById(id);
+const nm=s=>s.normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase().trim();
+const svg=(f,rv,fr)=>`<svg viewBox="0 0 30 20">${f.map(([c,s],i)=>!rv||rv.has(c)?`<g fill="${PAL[c]}" color="${PAL[c]}" stroke="none"${fr&&fr.has(c)?` class="pop" style="animation-delay:${i*60}ms"`:''}>${s}</g>`:'').join('')}</svg>`;
+const cols=f=>[...new Set(f[1].map(s=>s[0]))];
+let sec,gs,rev,over;
+function say(t,c){const m=$('msg');m.className='';void m.offsetWidth;m.className=c||'';m.textContent=t}
+function render(fr){
+  $('dots').innerHTML=[...Array(MAX)].map((_,i)=>`<i class="${i<gs.length?'u':''}"></i>`).join('');
+  const cs=cols(sec);
+  $('cnt').textContent=`${cs.length} cores na bandeira`;
+  $('flag').innerHTML=(rev.size?'':'<div class="q">?</div>')+svg(sec[1],rev,fr);
+  $('chips').innerHTML='Cores:'+cs.map(c=>rev.has(c)?`<b class="on" style="background:${PAL[c]}"></b>`:'<b>?</b>').join('');
+  $('hist').innerHTML=gs.slice().reverse().map(g=>`<li>${svg(g.f[1])}<div><b>${g.f[0]}</b><small>${g.com.length?'Cores em comum: '+g.com.map(c=>`<i class="d" style="background:${PAL[c]}"></i>`).join(''):'Nenhuma cor em comum'}</small></div><span class="${g.f===sec?'ok':'x'}">${g.f===sec?'✓':'✗'}</span></li>`).join('');
+  $('in').disabled=over;
+  $('go').textContent=over?'Jogar de novo':'Chutar';
+}
+function start(){
+  sec=F[Math.random()*F.length|0];gs=[];rev=new Set();over=false;
+  $('in').value='';sg();render();
+  say(`Qual país é essa bandeira? Você tem ${MAX} tentativas.`);
+}
+function guess(){
+  if(over)return start();
+  let k=nm($('in').value);k=AL[k]||k;
+  const f=F.find(x=>nm(x[0])===k);
+  if(!f)return say('País não encontrado. Escolha um da lista!','bad');
+  if(gs.some(g=>g.f===f))return say('Você já tentou esse país.','bad');
+  const sc=cols(sec),com=cols(f).filter(c=>sc.includes(c)),fr=new Set();
+  com.forEach(c=>{if(!rev.has(c))fr.add(c);rev.add(c)});
+  gs.push({f,com});$('in').value='';sg();
+  if(f===sec){over=true;sc.forEach(c=>{if(!rev.has(c))fr.add(c);rev.add(c)});render(fr);return say(`🎉 Acertou em ${gs.length} ${gs.length>1?'tentativas':'tentativa'}! É ${sec[0]}.`,'win')}
+  if(gs.length>=MAX){over=true;sc.forEach(c=>{if(!rev.has(c))fr.add(c);rev.add(c)});render(fr);return say(`Fim de jogo! A bandeira era ${sec[0]}.`,'bad')}
+  render(fr);
+  say(com.length?`Errou! ${com.length>1?com.length+' cores reveladas':'1 cor revelada'} 🎨`:'Errou! Nenhuma cor em comum.','bad');
+  $('in').focus();
+}
+let cur=[],sel=0,exm=null,qq='';
+const hl=(n,q)=>{const i=q?nm(n).indexOf(q):-1;return i<0?n:n.slice(0,i)+'<mark>'+n.slice(i,i+q.length)+'</mark>'+n.slice(i+q.length)};
+function dr(){const u=$('sug');u.innerHTML=cur.map((f,i)=>`<div class="o${i===sel?' h':''}" data-i="${i}">${svg(f[1])}<span>${hl(f[0],qq)}</span></div>`).join('');u.style.display=cur.length?'block':'none';if(cur.length)u.scrollIntoView({block:'nearest'})}
+function sg(){
+  let q=nm($('in').value);q=AL[q]||q;qq=q;
+  exm=F.find(f=>nm(f[0])===q)||null;
+  $('pf').innerHTML=exm?svg(exm[1]):'';$('pf').className=exm?'on':'';
+  cur=q&&!over?F.filter(f=>nm(f[0]).includes(q)&&!gs.some(g=>g.f===f)).sort((a,b)=>nm(b[0]).startsWith(q)-nm(a[0]).startsWith(q)||a[0].localeCompare(b[0],'pt')).slice(0,6):[];
+  if(exm&&cur.length===1)cur=[];
+  sel=0;dr();
+}
+const pick=i=>{$('in').value=cur[i][0];sg();$('in').focus()};
+$('go').onclick=guess;
+$('in').oninput=sg;$('in').onfocus=sg;$('in').onblur=()=>{$('sug').style.display='none'};
+$('sug').onpointerdown=e=>{e.preventDefault();const o=e.target.closest('.o');if(o)pick(+o.dataset.i)};
+$('in').onkeydown=e=>{
+  const n=cur.length;
+  if(e.key==='ArrowDown'||e.key==='ArrowUp'){if(n){e.preventDefault();sel=(sel+(e.key==='ArrowDown'?1:n-1))%n;dr()}}
+  else if(e.key==='Escape'){cur=[];dr()}
+  else if(e.key==='Enter'){e.preventDefault();n&&!exm?pick(sel):guess()}
+};
+start();
+</script>
+</body>
+</html>
